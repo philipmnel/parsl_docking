@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import List
 
 #local imports
-from dock import dock_ligand, process_poses, rescore_ligand
+from .dock import dock_ligand, process_poses, rescore_ligand
 
 
 def prepare_ligands(input_df, data_dir):
