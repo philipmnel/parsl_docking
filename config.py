@@ -12,6 +12,7 @@ tconfig = Config(executors=[ThreadPoolExecutor(
 #checkpoint_files = get_all_checkpoints())
 )
 
+# edit config below to run slurm jobs
 ht_config = Config(
 	executors=[
 		HighThroughputExecutor(
