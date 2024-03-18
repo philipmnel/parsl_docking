@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools >= 40.6.0", "wheel", "setuptools-git-versioning"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "parsl_docking"
+version = "0.0"
+authors = [
+  {name = "Philip Nelson", email = "pmnelson@gatech.edu"},
+]
+
+[tool.setuptools-git-versioning]
+enabled = true
+dev_template = "{tag}.{ccount}+git.{sha}"
+dirty_template = "{tag}.{ccount}+git.{sha}.dirty"
