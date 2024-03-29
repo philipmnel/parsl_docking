@@ -87,7 +87,8 @@ def flow(input_df: pd.DataFrame, receptor: str, center: list, protein_file: str,
 
     #rescore docked ligands
     #protein_file = open("data/5htr/target/rec.xyz")
-    protein_str = protein_file.read()
+    with open(protein_file, 'r') as f:
+        protein_str = f.read()
     #protein_chg = 10
 
     task_list = []
@@ -96,7 +97,8 @@ def flow(input_df: pd.DataFrame, receptor: str, center: list, protein_file: str,
 
     results = [task.result() for task in task_list]
     print(results)
-    result_df["AP Net Energy"] = [sum(r) for r in results]
+    result_df["AP Net Energy"] = [r[0] for r in results]
+    result_df["AP Net STD"] = [r[1] for r in results]
 
     #print(result_df)
     

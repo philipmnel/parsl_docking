@@ -78,10 +78,10 @@ def process_poses(inputs=[]) :
     return pose_str, charge
 
 @lru_cache()
-def load_model(model_path: str) -> object:
+def load_model(model_num: int) -> object:
     import apnet
     #model = apnet.PairModel.from_file("/theoryfs2/ds/pmnelson/chem/apnet/apnet/pair_models/pair0")
-    model = apnet.PairModel.from_file(model_path)
+    model = apnet.PairModel.pretrained(model_num)
     print("initialized ap-net model :)")
     return model
 
@@ -92,6 +92,7 @@ def rescore_ligand(protein_chg: int, protein_str: str, charge: int, pose: str, m
     Returns AP-Net interaction energy.
     """
     import qcelemental as qcel
+    import numpy as np
 
     try:
         dimer = qcel.models.Molecule.from_data(f"""
@@ -101,11 +102,18 @@ def rescore_ligand(protein_chg: int, protein_str: str, charge: int, pose: str, m
         {charge} 1
         {pose}
         """)
+        pred_list = []
+        for model_num in range(5):
+            model = load_model(model_num)
+            pred = model.predict(dimers=[dimer])
+            pred_list.append(sum(pred[0]))
+        
+        ret = np.mean(pred_list)
+        std = np.std(pred_list)
 
-        model = load_model(model_path)
-        pred = model.predict(dimers=[dimer])
     except:
-        pred = [[0.0]]
+        ret = 0.0
+        std = 0.0
 
-    return pred[0]
+    return (ret, std)
 
