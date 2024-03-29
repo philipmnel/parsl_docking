@@ -5,15 +5,14 @@ from parsl.executors import HighThroughputExecutor
 from parsl.providers import SlurmProvider
 from parsl.launchers import SrunLauncher
 
-tconfig = Config(executors=[ThreadPoolExecutor(
-    max_threads=1, label='local_threads'
-)],
-#checkpoint_mode='task_exit')
-#checkpoint_files = get_all_checkpoints())
-)
+def tconfig(threads=1):
+	return Config(executors=[ThreadPoolExecutor(
+    max_threads=threads, label='local_threads'
+	)],)
 
 # edit config below to run slurm jobs
-ht_config = Config(
+def ht_config(workers=16):
+	return Config(
 	executors=[
 		HighThroughputExecutor(
 			label="htex",
@@ -26,7 +25,7 @@ ht_config = Config(
 				nodes_per_block=1,
 				mem_per_node=32,
 				init_blocks=1,
-				max_blocks=16,
+				max_blocks=workers,
 				scheduler_options="",
 				cmd_timeout=60,
 				walltime="01:00:00",
@@ -35,4 +34,4 @@ ht_config = Config(
 			),
 		)
 	],
-)
+	)
